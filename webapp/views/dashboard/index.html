@@ -1,0 +1,193 @@
+<script>
+//model.appname = ko.observable("say");
+model.clusters=ko.observableArray();
+assignObsArray(model.clusters, {{.cluster}});
+</script>
+
+<cluster data-bind="foreach:clusters">
+    <div class="row" style="margin-left:5px">
+        <div class="col-md-3">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <span data-bind="text:Provider() + ' : ' + Name()"></span>
+                </div>
+                <div class="panel-body">
+                    <b>Hosts</b></br>
+                    <hosts data-bind="foreach:Hosts">
+                        <host data-bind="text:Name"></host><br/>
+                    </hosts>
+                    
+                    <br/>
+                    <b>Services</b></br>
+                    <services data-bind="foreach:Services">
+                        <span data-bind="text:Name()+'&nbsp;&nbsp;'"></span>
+                    </services>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    CPU
+                </div>
+                <div class="panel-body">
+                    <div class="chart-cpu" data-bind="attr:{clusterid:Name}"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    Memory
+                </div>
+                <div class="panel-body">
+                   <div class="chart-memory" data-bind="attr:{clusterid:Name}"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    Network
+                </div>
+                <div class="panel-body">
+                   <div class="chart-network" data-bind="attr:{clusterid:Name}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</cluster>
+
+<script>
+
+function getConfig(dataser, series){
+    var config= {
+        dataSource: dataset,
+        seriesDefaults: {
+            type: "column"
+        },
+        chartArea:{
+            //width:320,
+            height:180  
+        },
+        categoryAxis: {
+            field: "Time",
+            labels: {
+                visible:false,
+                font:"8px calibri",
+                rotation: -90
+            },
+            crosshair: {
+                visible: true
+            },
+            majorGridLines:{
+                visible:false
+            },
+            minorGridLines:{
+                visible:false
+            }
+        },
+        valueAxis: {
+            labels: {
+                format: "N2",
+                font:"8px calibri"
+            },
+            //,
+            //majorUnit: 10000
+        },
+        tooltip: {
+            visible: true,
+            shared: true,
+            format: "N1"
+        },
+        transitions:false,
+        series: series
+        };
+        return config;
+}
+
+function renderChartCPU(){
+    dloads = $(".chart-cpu");
+    $.each(dloads,function(i,d){
+        layer = $(d);
+        clusterid = layer.attr("clusterid");
+        //layer.html(clusterid + " - " + new Date());
+
+        ajaxPost("{{BaseUrl}}dashboard/getcpu?name="+clusterid,{},
+        function(result){
+            dataset = result.Data;
+
+             var config=getConfig(dataset,
+                [
+                    {field: "User",color: "green", stack:true},
+                    {field: "System",color: "yellow", stack:true}
+                ]);
+
+            ecChart($(d),config);
+        });
+    });
+
+    window.setTimeout(renderChartCPU,3000);    
+}
+
+function renderChartMemory(){
+    dloads = $(".chart-memory");
+    $.each(dloads,function(i,d){
+        layer = $(d);
+        clusterid = layer.attr("clusterid");
+        //layer.html(clusterid + " - " + new Date());
+
+        ajaxPost("{{BaseUrl}}dashboard/getmemory?name="+clusterid,{},
+        function(result){
+            dataset = result.Data;
+
+             var config=getConfig(dataset,
+                [
+                    {field: "Share",stack:true},
+                    {field: "Use",stack:true},
+                    {field: "Cache",stack:true},
+                    {field: "Swap",stack:true},
+                    {field: "Buffer",stack:true}
+                ]);
+
+            ecChart($(d),config);
+        });
+    });
+
+    window.setTimeout(renderChartMemory,3000);    
+}
+
+function renderChartNetwork(){
+    dloads = $(".chart-network");
+    $.each(dloads,function(i,d){
+        layer = $(d);
+        clusterid = layer.attr("clusterid");
+        //layer.html(clusterid + " - " + new Date());
+
+        ajaxPost("{{BaseUrl}}dashboard/getnetwork?name="+clusterid,{},
+        function(result){
+            dataset = result.Data;
+
+             var config=getConfig(dataset,
+                [
+                    {field: "Out",stack:true},
+                    {field: "In",stack:true}
+                ]);
+
+            ecChart($(d),config);
+        });
+    });
+
+    window.setTimeout(renderChartNetwork,3000);    
+}
+
+function doInit(){
+    renderChartCPU();
+    renderChartMemory();
+    renderChartNetwork();
+}
+
+</script>

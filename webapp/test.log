@@ -1,0 +1,18 @@
+INFO 2016/09/08 17:00:48 Scan application colony-manager for controller registration
+INFO 2016/09/08 17:00:48 Registering Dashboard
+INFO 2016/09/08 17:00:48 Registering handler for /dashboard/index
+INFO 2016/09/08 17:00:48 Registering DataManager
+INFO 2016/09/08 17:00:48 Registering handler for /datamanager/index
+INFO 2016/09/08 17:00:48 Registering Orchestrator
+INFO 2016/09/08 17:00:48 Registering handler for /orchestrator/index
+INFO 2016/09/08 17:00:48 Registering Studio
+INFO 2016/09/08 17:00:48 Registering handler for /studio/index
+INFO 2016/09/08 17:00:48 Registering RestAPI
+INFO 2016/09/08 17:00:48 Registering handler for /restapi/index
+INFO 2016/09/08 17:00:48 Registering handler for /restapi/metadata
+INFO 2016/09/08 17:00:48 Add static /views/ from /Users/ariefdarmawan/goapp/src/eaciit/colony-manager/webapp/views
+INFO 2016/09/08 17:00:48 Add static /static/ from /Users/ariefdarmawan/goapp/src/eaciit/colony-manager/webapp/assets
+INFO 2016/09/08 17:00:48 Registering handler for /status
+INFO 2016/09/08 17:00:48 Registering handler for /stop
+INFO 2016/09/08 17:00:48 Registering handler for /
+INFO 2016/09/08 17:00:48 Start listening on server localhost:9100

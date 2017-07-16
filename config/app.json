@@ -1,0 +1,15 @@
+{
+    "_server":"0.0.0.0",
+    "port":9100,
+    "appname":"bigdata-cluster-monitor",
+    "version":"0.5",
+    "clusters":[{
+        "Provider":"AmbariV1",
+        "Name":"echdp01","Active":true,
+        "UserName":"admin","Password":"Hulk.1234",
+        "APIUri":"http://35.186.145.74:8080/api/v1"},
+    {"Provider":"AmbariV1","Active":false,
+        "Name":"echdp01","UserName":"admin",
+        "Password":"Hulk.1234",
+        "APIUri":"http://35.186.145.74:8080/api/v1"}]
+}
