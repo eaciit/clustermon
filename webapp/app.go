@@ -67,13 +67,16 @@ func main() {
 
 	wd := config.GetDefault("workingpath", "").(string)
 	app := App(wd)
+	knot.DefaultOutputType = knot.OutputTemplate
+
+	routes := make(map[string]knot.FnContent)
+	routes["/"] = func(r *knot.WebContext) interface{} {
+		http.Redirect(r.Writer, r.Request, "/dashboard/index", 301)
+		return true
+	}
+
 	//knot.StartApp(app, toolkit.Sprintf("%s:%d", serveraddress, port))
-	knot.StartAppWithFn(app, toolkit.Sprintf("%s:%d", serveraddress, port),
-		map[string]knot.FnContent{
-			"/": func(r *knot.WebContext) interface{} {
-				http.Redirect(r.Writer, r.Request, "/dashboard/index", 301)
-				return nil
-			}})
+	knot.StartAppWithFn(app, toolkit.Sprintf("%s:%d", serveraddress, port), routes)
 }
 
 func App(wd string) *knot.App {
