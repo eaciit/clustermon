@@ -2,6 +2,7 @@ package main
 
 import (
 	"eaciit/clustermon/webapp/controller"
+	"net/http"
 	"os"
 	"path/filepath"
 
@@ -19,8 +20,15 @@ var (
 
 func ExePath() string {
 	if exepath == "" {
-		exePath, _ := os.Executable()
-		exePath = filepath.Dir(exePath)
+		//-- go < 1.8
+		exepath, _ = os.Getwd()
+		//exepath = filepath.Dir(exepath)
+
+		//-- go > 1.8
+		/*
+			exepath, _ = os.Executable()
+			exepath = filepath.Dir(exepath)
+		*/
 	}
 	return exepath
 }
@@ -59,15 +67,13 @@ func main() {
 
 	wd := config.GetDefault("workingpath", "").(string)
 	app := App(wd)
-	knot.StartApp(app, toolkit.Sprintf("%s:%d", serveraddress, port))
-	/*
-		knot.StartAppWithFn(app, toolkit.Sprintf("%s:%d", serveraddress, port),
-			map[string]knot.FnContent{
-				"/": func(r *knot.WebContext) interface{} {
-					http.Redirect(r.Writer, r.Request, "/dashboard/index", 301)
-					return nil
-				}})
-	*/
+	//knot.StartApp(app, toolkit.Sprintf("%s:%d", serveraddress, port))
+	knot.StartAppWithFn(app, toolkit.Sprintf("%s:%d", serveraddress, port),
+		map[string]knot.FnContent{
+			"/": func(r *knot.WebContext) interface{} {
+				http.Redirect(r.Writer, r.Request, "/dashboard/index", 301)
+				return nil
+			}})
 }
 
 func App(wd string) *knot.App {

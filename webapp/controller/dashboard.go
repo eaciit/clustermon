@@ -122,3 +122,8 @@ func findCluster(name string) (clustermon.ICluster, error) {
 
 	return nil, fmt.Errorf("Cluster %s could not be found", name)
 }
+
+func (d *Dashboard) Detail(ctx *knot.WebContext) interface{} {
+	ctx.Config.OutputType = knot.OutputTemplate
+	return toolkit.M{}.Set("message", "Hallo dari clustermon")
+}

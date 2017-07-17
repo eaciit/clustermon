@@ -1,6 +1,6 @@
 {
     "_server":"0.0.0.0",
-    "port":9100,
+    "port":9032,
     "appname":"bigdata-cluster-monitor",
     "version":"0.5",
     "clusters":[{
